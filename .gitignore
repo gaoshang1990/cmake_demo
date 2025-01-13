@@ -1,3 +1,5 @@
 build/linux
 build/mingw
 build/win32
+
+src/app/version.h

@@ -1,18 +1,12 @@
-#include <stdio.h>
 
-#define FMT_HEADER_ONLY
-#include <fmt/core.h>
-
+#include "utils_log.h"
 #include "version.h"
 
 
 int main()
 {
-    fmt::print("Version: {}\n", APP_FULL_VERSION);
-
-    printf("Hello, World!\n");
-
-    fmt::print("Hello, World!\n");
+    slog_init(M_DEBUG, "./", "app.log");
+    slog_app_info("demo", APP_FULL_VERSION);
 
     return 0;
 }

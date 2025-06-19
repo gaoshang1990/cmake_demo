@@ -10,10 +10,10 @@ make_version_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/src/app/version.h
 )
 
-recurse_auto_sources(user_files_c   "*.c"   "${CMAKE_CURRENT_SOURCE_DIR}/src" RELATIVE)
-recurse_auto_sources(user_files_cpp "*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/src" RELATIVE)
-recurse_auto_sources(user_files_h   "*.h"   "${CMAKE_CURRENT_SOURCE_DIR}/src" RELATIVE)
-recurse_auto_sources(user_files_hpp "*.hpp" "${CMAKE_CURRENT_SOURCE_DIR}/src" RELATIVE)
+recurse_auto_sources(user_files_c   "*.c"   "/src" RELATIVE)
+recurse_auto_sources(user_files_cpp "*.cpp" "/src" RELATIVE)
+recurse_auto_sources(user_files_h   "*.h"   "/src" RELATIVE)
+recurse_auto_sources(user_files_hpp "*.hpp" "/src" RELATIVE)
 
 if (MSVC)
     message(STATUS "Configuring for Win32")
@@ -26,7 +26,7 @@ if (MSVC)
     add_compile_options(/wd4819)                                                                     # 忽略4819告警
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -NODEFAULTLIB:MSVCRT -SAFESEH:NO")
 
-    recurse_auto_sources(user_files_lib "*.lib" "${CMAKE_CURRENT_SOURCE_DIR}/src/lib" RELATIVE)
+    recurse_auto_sources(user_files_lib "*.lib" "src/lib" RELATIVE)
     list(APPEND user_files_lib 
         legacy_stdio_definitions
     )
@@ -36,8 +36,8 @@ else()
     remove_matches_from_lists(user_files_c user_files_cpp user_files_h MATCHES "/win32")
     remove_matches_from_lists(user_files_c user_files_cpp user_files_h MATCHES "/pthread")
 
-    recurse_auto_sources(user_files_lib "*.so" "${CMAKE_CURRENT_SOURCE_DIR}/src/lib" RELATIVE)
-    recurse_auto_sources(user_files_lib "*.a"  "${CMAKE_CURRENT_SOURCE_DIR}/src/lib" RELATIVE)
+    recurse_auto_sources(user_files_lib "*.so" "src/lib" RELATIVE)
+    recurse_auto_sources(user_files_lib "*.a"  "src/lib" RELATIVE)
     list(APPEND user_files_lib 
         pthread
         dl

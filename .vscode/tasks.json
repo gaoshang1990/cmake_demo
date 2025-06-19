@@ -25,6 +25,17 @@
             },
             "command": "cmake --build .",
             "group": "build",
+            "dependsOn": [],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "release_win32",
+            "type": "shell",
+            "options": {
+                "cwd": "${workspaceFolder}/build/win32"
+            },
+            "command": "cmake --build . --config Release",
+            "group": "build",
             "dependsOn": [
                 "cmake_win32"
             ],

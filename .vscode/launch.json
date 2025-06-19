@@ -6,15 +6,11 @@
             "name": "C++ Launch (Windows)",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/win32/Debug/cmake_demo.exe",
-            // "symbolSearchPath": "C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/Tools/MSVC/14.29.30133/bin/Hostx86/x86",
+            "program": "${workspaceFolder}/build/win32/Debug/${workspaceFolderBasename}.exe",
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}/build/win32",
             "environment": [],
             "console": "integratedTerminal",
-            // "console": "externalTerminal",
-            // "console": "internalConsole",
-            // "externalConsole": false,
             "logging": {
                 "moduleLoad": false,
                 "trace": true

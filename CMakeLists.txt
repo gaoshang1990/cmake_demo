@@ -10,10 +10,10 @@ make_version_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/src/app/version.h
 )
 
-recurse_auto_sources(user_files_c   "*.c"   "/src" RELATIVE)
-recurse_auto_sources(user_files_cpp "*.cpp" "/src" RELATIVE)
-recurse_auto_sources(user_files_h   "*.h"   "/src" RELATIVE)
-recurse_auto_sources(user_files_hpp "*.hpp" "/src" RELATIVE)
+recurse_auto_sources(user_files_c   "*.c"   "src" RELATIVE)
+recurse_auto_sources(user_files_cpp "*.cpp" "src" RELATIVE)
+recurse_auto_sources(user_files_h   "*.h"   "src" RELATIVE)
+recurse_auto_sources(user_files_hpp "*.hpp" "src" RELATIVE)
 
 if (MSVC)
     message(STATUS "Configuring for Win32")
@@ -27,6 +27,8 @@ if (MSVC)
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -NODEFAULTLIB:MSVCRT -SAFESEH:NO")
 
     recurse_auto_sources(user_files_lib "*.lib" "src/lib" RELATIVE)
+    find_files_dirs(user_dirs_lib "${user_files_lib}"     RELATIVE) # 放在提取文件名之前
+    files_base_name(user_files_lib ${user_files_lib}) # 提取不带扩展名和路径的文件名
     list(APPEND user_files_lib 
         legacy_stdio_definitions
     )
@@ -36,21 +38,26 @@ else()
     remove_matches_from_lists(user_files_c user_files_cpp user_files_h MATCHES "/win32")
     remove_matches_from_lists(user_files_c user_files_cpp user_files_h MATCHES "/pthread")
 
-    recurse_auto_sources(user_files_lib "*.so" "src/lib" RELATIVE)
-    recurse_auto_sources(user_files_lib "*.a"  "src/lib" RELATIVE)
+    recurse_auto_sources(user_files_lib "*.so" "src/lib") # linux 库使用绝对路径, 不然下面的链接不好处理
+    recurse_auto_sources(user_files_lib "*.a"  "src/lib")
+    find_files_dirs(user_dirs_lib "${user_files_lib}" RELATIVE)
     list(APPEND user_files_lib 
         pthread
         dl
     )
 endif(MSVC)
 
-find_files_dirs(user_dirs_lib "${user_files_lib}"                  RELATIVE)
 find_files_dirs(user_dirs_inc "${user_files_h}; ${user_files_hpp}" RELATIVE)
 list(APPEND user_dirs_inc "src/lib")
 list(APPEND user_dirs_inc "src/third_party")
 
 # 指定生成目标
-add_executable(${PROJECT_NAME} ${user_files_c} ${user_files_cpp} ${user_files_h} ${user_files_hpp})
+add_executable(${PROJECT_NAME}
+    ${user_files_c}
+    ${user_files_cpp}
+    ${user_files_h}
+    ${user_files_hpp}
+)
 
 # 添加链接库, 库文件目录, 头文件目录
 target_link_directories(${PROJECT_NAME}    PRIVATE ${user_dirs_lib})

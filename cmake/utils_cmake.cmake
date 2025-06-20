@@ -1,4 +1,3 @@
-
 # 绝对路径转成相对路径
 function(path_to_relative ret)
     set(RELATIVE_PATHS "")
@@ -191,3 +190,27 @@ function(auto_source_group rootName rootDir)
         endif()
     endforeach()
 endfunction()
+
+
+# 从文件路径中提取不带扩展名的文件名
+# ret:   返回值变量名，存储处理后的文件名列表
+# ARGN:  输入的文件路径列表，支持以下格式：
+#        - 完整路径: "src/lib/utils/utils.lib" -> "utils"
+#        - 相对路径: "utils/helper.lib" -> "helper"  
+#        - 文件名:   "math.lib" -> "math"
+# 示例: extract_base_names(lib_names "src/lib/utils/utils.lib" "math.lib")
+#       结果: lib_names = ["utils", "math"]
+function(files_base_name ret)
+    set(names_without_ext "")
+    
+    foreach(file_path ${ARGN})
+        if(file_path)  # 跳过空字符串
+            get_filename_component(name_we ${file_path} NAME_WE)
+            if(name_we)  # 确保提取到了有效的文件名
+                list(APPEND names_without_ext ${name_we})
+            endif()
+        endif()
+    endforeach()
+    
+    set(${ret} ${names_without_ext} PARENT_SCOPE)
+endfunction(files_base_name)

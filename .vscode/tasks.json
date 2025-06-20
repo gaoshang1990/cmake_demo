@@ -51,7 +51,6 @@
                 "cmake"
             ],
             "args": [
-                "-DWIN32=0",
                 "-DCMAKE_BUILD_TYPE=Release",
                 "-DCMAKE_TOOLCHAIN_FILE:STRING=cmake/arm-gcc-toolchain.cmake",
                 "../..",
@@ -68,9 +67,7 @@
             },
             "command": "mingw32-make",
             "group": "build",
-            "dependsOn": [
-                "cmake_mingw"
-            ],
+            "dependsOn": [],
         },
         {
             "label": "mkdir",

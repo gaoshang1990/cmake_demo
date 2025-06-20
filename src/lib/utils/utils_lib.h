@@ -26,12 +26,19 @@ uint32_t hex2bcd32(uint32_t hex);
 uint64_t bcd2int(uint8_t* bcd, uint8_t len);
 
 /* memcpy in an opposite direction */
-void memcpy_r(uint8_t* dst, uint8_t* src, int len);
+void memcpy_r(uint8_t* dst, uint8_t* src, uint32_t len);
 
 /* memory data inversion of specified length */
 int mem_rev(uint8_t* buf, int len);
 
 void mem_swap(void* a, void* b, int size);
+
+/**
+ * @brief   Check system endianness
+ * @retval  UTIL_LITTLE_ENDIAN: little endian system
+ * @retval  UTIL_BIG_ENDIAN: big endian system
+ */
+int utils_endian(void);
 
 /**
  * @brief   Convert a series of bytes into an integer
@@ -45,31 +52,39 @@ uint64_t byte2int(uint8_t* buf, int* offset, int len, int mode);
 
 double byte2fp(uint8_t* buf, int* offset, int len, int mode);
 
-void short2byte(uint8_t* dst, short src, int mode);
-void int2byte(uint8_t* dst, int src, int mode);
+void short2byte(uint8_t* dst, short src, int endian);
+void int2byte(uint8_t* dst, int src, int endian);
 
 /* string to number, strlen should <= 8 */
-int atox_(const char* str, int len);
+uint64_t utils_atox(const char* str, uint32_t len);
 
 /**
- * \brief   string turn to uint8 array:
+ * @brief   string turn to uint8 array:
  *          "680100" -> [0x68, 0x01, 0x00]
+ * @return  the length of the converted array
  */
-int str2byte(uint8_t* dst, int bufSize, const char* str);
+uint32_t str2byte(uint8_t* dst, uint32_t dst_size, const char* str);
 
 /**
- * \brief   uint8 array turn to string:
+ * @brief   uint8 array turn to string:
  *          [0x68, 0x01, 0x00] -> "680100"
  */
-int byte2str(char* str, uint8_t* buf, int bufLen);
-
-int add_gap(uint8_t* data, int len, int gap);
+void byte2str(char* str, uint8_t* buf, int buf_len);
 
 /**
- * @brief   Get the first number in a string
- * @retval  -1: no number found
+ * @brief   Add a gap to each byte in the data array
+ * @details This function adds a specified gap to each byte in the data array.
+ *          If the addition results in a value greater than 0xFF, it wraps around.
+ * @param   gap:    The gap to add to each byte, can be positive or negative.
  */
-int num_in_str(const char* str);
+void add_gap(uint8_t* data, uint32_t data_len, int gap);
+
+/**
+ * @brief   Get the first number (integer or decimal) in a string
+ * @retval  -1.0: no number found
+ */
+double utils_get_num(const char* str);
+
 
 #ifdef __cplusplus
 }

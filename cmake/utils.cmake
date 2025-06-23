@@ -1,34 +1,34 @@
 # 绝对路径转成相对路径
-function(path_to_relative ret)
-    set(RELATIVE_PATHS "")
+function(path_to_relative ret_)
+    set(relative_paths_ "")
 
-    foreach(PATH_ ${ARGN})
+    foreach(path_ ${ARGN})
         # 获取相对于项目根目录的路径
-        if(IS_ABSOLUTE "${PATH_}")
-            file(RELATIVE_PATH REL_FILE "${CMAKE_CURRENT_SOURCE_DIR}" "${PATH_}")
-            list(APPEND RELATIVE_PATHS "${REL_FILE}")
+        if(IS_ABSOLUTE "${path_}")
+            file(RELATIVE_PATH relative_file_ "${CMAKE_CURRENT_SOURCE_DIR}" "${path_}")
+            list(APPEND relative_paths_ "${relative_file_}")
         else()
-            list(APPEND RELATIVE_PATHS "${PATH_}")
+            list(APPEND relative_paths_ "${path_}")
         endif()
     endforeach()
 
-    set(${ret} ${RELATIVE_PATHS} PARENT_SCOPE)
+    set(${ret_} ${relative_paths_} PARENT_SCOPE)
 endfunction(path_to_relative)
 
 # 相对路径转成绝对路径
-function(path_to_absolute ret)
-    set(abs_paths "")
+function(path_to_absolute ret_)
+    set(abs_paths_ "")
 
     foreach(path_ ${ARGN})
         if(NOT IS_ABSOLUTE "${path_}")
             get_filename_component(abs_path "${CMAKE_CURRENT_SOURCE_DIR}/${path_}" ABSOLUTE)
-            list(APPEND abs_paths "${abs_path}")
+            list(APPEND abs_paths_ "${abs_path}")
         else()
-            list(APPEND abs_paths "${path_}")
+            list(APPEND abs_paths_ "${path_}")
         endif()
     endforeach()
 
-    set(${ret} ${abs_paths} PARENT_SCOPE)
+    set(${ret_} ${abs_paths_} PARENT_SCOPE)
 endfunction(path_to_absolute)
 
 # 自动收集源文件
@@ -36,28 +36,28 @@ endfunction(path_to_absolute)
 # pattern:  匹配的文件模式
 # dir:      指定的目录, 递归查找
 # RELATIVE: 可选参数，指定时返回相对路径，否则返回绝对路径
-function(recurse_auto_sources ret pattern dir)
-    path_to_absolute(dir ${dir}) # 确保 dir 是绝对路径
+function(recurse_auto_sources ret_ pattern_ dir_)
+    path_to_absolute(dir_ ${dir_}) # 确保 dir_ 是绝对路径
 
-    file(GLOB subdir_files "${dir}/${pattern}")
-    list(APPEND ${ret} ${subdir_files})
+    file(GLOB subdir_files_ "${dir_}/${pattern_}")
+    list(APPEND ${ret_} ${subdir_files_})
 
-    file(GLOB subdirs RELATIVE ${dir} ${dir}/*)
+    file(GLOB subdirs_ RELATIVE ${dir_} ${dir_}/*)
 
-    foreach(DIR ${subdirs})
-        if (IS_DIRECTORY ${dir}/${DIR})
-            if (NOT "${DIR}" STREQUAL "CMakeFiles")
-                file(GLOB_RECURSE subdir_files "${dir}/${DIR}/${pattern}")
-                list(APPEND ${ret} ${subdir_files})
+    foreach(sub_ ${subdirs_})
+        if (IS_DIRECTORY ${dir_}/${sub_})
+            if (NOT "${sub_}" STREQUAL "CMakeFiles")
+                file(GLOB_RECURSE subdir_files_ "${dir_}/${sub_}/${pattern_}")
+                list(APPEND ${ret_} ${subdir_files_})
             endif()
         endif()
     endforeach()
 
     if("RELATIVE" IN_LIST ARGN)
-        path_to_relative(${ret} ${${ret}})
+        path_to_relative(${ret_} ${${ret_}})
     endif()
     
-    set(${ret} ${${ret}} PARENT_SCOPE)
+    set(${ret_} ${${ret_}} PARENT_SCOPE)
 endfunction(recurse_auto_sources)
 
 # Remove all files matching a set of patterns, and,

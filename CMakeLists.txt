@@ -3,7 +3,7 @@ cmake_minimum_required (VERSION 3.16)
 project(cmake_demo)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
-include(utils_include)
+include(includes)
 
 make_version_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/cmake/version.h.in
@@ -15,16 +15,16 @@ recurse_auto_sources(user_files_cpp "*.cpp" "src" RELATIVE)
 recurse_auto_sources(user_files_h   "*.h"   "src" RELATIVE)
 recurse_auto_sources(user_files_hpp "*.hpp" "src" RELATIVE)
 
-if (MSVC)
+if(MSVC)
     message(STATUS "Configuring for Win32")
     
     add_compile_options(/utf-8)
-    add_definitions(-DTTUAPP_LIB_TEST)                                                               # 代码添加宏定义
+    add_compile_options(/wd4819)                                                                     # 忽略4819告警
     set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${PROJECT_NAME})  # 设置VS默认启动工程
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -NODEFAULTLIB:MSVCRT -SAFESEH:NO")
+    
     remove_matches_from_lists(user_files_c user_files_cpp user_files_h MATCHES "/linux")             # 删除不需要的文件
     auto_source_group(source ./ ${user_files_c} ${user_files_cpp} ${user_files_h} ${user_files_hpp}) # vs工程目录结构
-    add_compile_options(/wd4819)                                                                     # 忽略4819告警
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -NODEFAULTLIB:MSVCRT -SAFESEH:NO")
 
     recurse_auto_sources(user_files_lib "*.lib" "src/lib" RELATIVE)
     find_files_dirs(user_dirs_lib "${user_files_lib}"     RELATIVE) # 放在提取文件名之前

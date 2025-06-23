@@ -9,7 +9,12 @@
             "program": "${workspaceFolder}/build/win32/Debug/${workspaceFolderBasename}.exe",
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}/build/win32",
-            "environment": [],
+            "environment": [
+                {
+                    "name": "PATH",
+                    "value": "D:/dev/lib/vcpkg/installed/x64-windows/bin;${env:PATH}"
+                }
+            ],
             "console": "integratedTerminal",
             "logging": {
                 "moduleLoad": false,

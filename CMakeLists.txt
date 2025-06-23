@@ -19,7 +19,8 @@ if(MSVC)
     message(STATUS "Configuring for Win32")
     
     add_compile_options(/utf-8)
-    add_compile_options(/wd4819)                                                                     # 忽略4819告警
+    add_compile_options(/wd4819)
+    add_compile_options("$<$<CONFIG:Debug>:/MDd>" "$<$<CONFIG:Release>:/MD>")
     set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${PROJECT_NAME})  # 设置VS默认启动工程
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -NODEFAULTLIB:MSVCRT -SAFESEH:NO")
     
@@ -28,7 +29,8 @@ if(MSVC)
 
     recurse_auto_sources(user_files_lib "*.lib" "src/lib" RELATIVE)
     find_files_dirs(user_dirs_lib "${user_files_lib}"     RELATIVE) # 放在提取文件名之前
-    files_base_name(user_files_lib ${user_files_lib}) # 提取不带扩展名和路径的文件名
+    files_base_name(user_files_lib ${user_files_lib})               # 提取不带扩展名和路径的文件名
+
     list(APPEND user_files_lib 
         legacy_stdio_definitions
     )

@@ -6,7 +6,7 @@
             "name": "C++ Launch (Windows)",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/win32/Debug/${workspaceFolderBasename}.exe",
+            "program": "${workspaceFolder}/build/win32/Debug/cmake_demo.exe",
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}/build/win32",
             "environment": [

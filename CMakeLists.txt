@@ -30,8 +30,6 @@ if(MSVC)
     find_files_dirs(user_dirs_lib "${user_files_lib}"     RELATIVE) # 放在提取文件名之前
     files_base_name(user_files_lib ${user_files_lib})               # 提取不带扩展名和路径的文件名
 
-    list(APPEND user_files_lib 
-    )
 else()
     message(STATUS "Configuring for Linux")
 

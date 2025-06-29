@@ -2,8 +2,7 @@ cmake_minimum_required (VERSION 3.16)
 
 project(cmake_demo)
 
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
-include(includes)
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/includes.cmake)
 
 make_version_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/cmake/version.h.in
@@ -32,7 +31,6 @@ if(MSVC)
     files_base_name(user_files_lib ${user_files_lib})               # 提取不带扩展名和路径的文件名
 
     list(APPEND user_files_lib 
-        legacy_stdio_definitions
     )
 else()
     message(STATUS "Configuring for Linux")

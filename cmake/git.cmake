@@ -2,7 +2,8 @@ function(git_commit_counts _var)
     if(NOT GIT_FOUND)
         set(${_var}
             "000000"
-            PARENT_SCOPE)
+            PARENT_SCOPE
+        )
         return()
     endif()
 
@@ -20,7 +21,8 @@ function(git_commit_counts _var)
 
     set(${_var}
         "${out}"
-        PARENT_SCOPE)
+        PARENT_SCOPE
+    )
 endfunction()
 
 
@@ -28,7 +30,8 @@ function(git_branch_name _var)
     if(NOT GIT_FOUND)
         set(${_var}
             "main"
-            PARENT_SCOPE)
+            PARENT_SCOPE
+        )
         return()
     endif()
 
@@ -46,14 +49,16 @@ function(git_branch_name _var)
 
     set(${_var}
         "${out}"
-        PARENT_SCOPE)
+        PARENT_SCOPE
+    )
 endfunction()
 
 function(git_describe_string _var)
     if(NOT GIT_FOUND)
         set(${_var}
             "unknown"
-            PARENT_SCOPE)
+            PARENT_SCOPE
+        )
         return()
     endif()
 
@@ -71,22 +76,24 @@ function(git_describe_string _var)
 
     set(${_var}
         "${out}"
-        PARENT_SCOPE)
+        PARENT_SCOPE
+    )
 endfunction()
 
 function(git_version_string _var)
     git_commit_counts(COMMITS)
     
     # 计算版本号
-    # 每100次提交，次版本号加1
-    # 每1000次提交(次版本号超过9)，主版本号加1
-    math(EXPR MAJOR "1 + (${COMMITS} / 1000)")
+    # 每100次提交, 次版本号加1
+    # 每1000次提交(次版本号超过9), 主版本号加1
+    math(EXPR MAJOR "(${COMMITS} / 1000)")
     math(EXPR MINOR "(${COMMITS} / 100) % 10")
-    math(EXPR PATCH "${COMMITS} % 100")
-    
+    math(EXPR PATCH "(${COMMITS} % 100)")
+
     set(${_var}
         "${MAJOR}.${MINOR}.${PATCH}"
-        PARENT_SCOPE)
+        PARENT_SCOPE
+    )
 endfunction()
 
 function(make_version_file template_path output_path)

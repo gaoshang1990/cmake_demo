@@ -3,5 +3,7 @@ build/mingw
 build/win32
 
 src/app/version.h
-src/lib/utils/libutils.a
-src/lib/utils/utils.lib
+src/lib/utils4c/libutils4c.a
+src/lib/utils4c/utils4c.lib
+src/lib/utils4c/utils4cd.lib
+src/lib/utils4c/utils4cd.pdb

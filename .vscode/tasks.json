@@ -35,9 +35,7 @@
             },
             "command": "cmake --build . --config Release",
             "group": "build",
-            "dependsOn": [
-                "cmake_win32"
-            ],
+            "dependsOn": [],
             "problemMatcher": "$msCompile"
         },
         {

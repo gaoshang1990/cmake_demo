@@ -214,3 +214,130 @@ function(files_base_name ret)
     
     set(${ret} ${names_without_ext} PARENT_SCOPE)
 endfunction(files_base_name)
+
+# 智能处理 debug/release 库名，支持 sad/sad.lib、sa/sa.lib 等特殊情况
+# 支持传入带路径或不带路径的库名（如 src/lib/utils/utils.lib、utilsd.lib）
+# 用法：smart_link_libraries(ret_ lib1 lib2 ...)
+# 结果：ret_ 为生成器表达式拼接后的库列表
+function(libs_debug_release ret_)
+    set(processed_bases_ "")
+    set(ret_libs_ "")
+    
+    # 第一步：识别所有可能的基础名
+    set(potential_bases_ "")
+    foreach(lib ${ARGN})
+        get_filename_component(lib_name_we_ ${lib} NAME_WE)
+        
+        # 检查是否以'd'结尾
+        string(REGEX MATCH "(.+)d$" match_result_ ${lib_name_we_})
+        if(match_result_)
+            # 以'd'结尾，提取基础名
+            string(REGEX REPLACE "d$" "" base_ ${lib_name_we_})
+            list(APPEND potential_bases_ ${base_})
+        else()
+            # 不以'd'结尾，本身就是基础名
+            list(APPEND potential_bases_ ${lib_name_we_})
+        endif()
+    endforeach()
+    
+    # 去重基础名
+    list(REMOVE_DUPLICATES potential_bases_)
+    
+    # message(STATUS "Potential base names: ${potential_bases_}")
+    
+    # 第二步：对每个基础名进行处理
+    foreach(base_ ${potential_bases_})
+        # 跳过已处理的基础名
+        list(FIND processed_bases_ ${base_} found_idx_)
+        if(NOT found_idx_ EQUAL -1)
+            continue()
+        endif()
+        
+        set(has_release_ 0)
+        set(has_debug_   0)
+        set(release_lib_ "")
+        set(debug_lib_   "")
+        
+        # 查找对应的release和debug版本
+        foreach(lib_ ${ARGN})
+            get_filename_component(lib_name_we_ ${lib_} NAME_WE)
+            
+            if("${lib_name_we_}" STREQUAL "${base_}")
+                set(has_release_ 1)
+                set(release_lib_ "${lib_}")
+            endif()
+            
+            if("${lib_name_we_}" STREQUAL "${base_}d")
+                set(has_debug_ 1)
+                set(debug_lib_ "${lib_}")
+            endif()
+        endforeach()
+        
+        # 根据找到的版本添加到结果中
+        if(has_release_ AND has_debug_)
+            # 同时有release和debug版本
+            list(APPEND ret_libs_ 
+                "$<$<CONFIG:Debug>:${debug_lib_}>" 
+                "$<$<NOT:$<CONFIG:Debug>>:${release_lib_}>")
+            # message(STATUS "Found pair: ${base_} -> Debug: ${debug_lib_}, Release: ${release_lib_}")
+        elseif(has_release_)
+            # 只有release版本
+            list(APPEND ret_libs_ ${release_lib_})
+            # message(STATUS "Found release only: ${release_lib_}")
+        elseif(has_debug_)
+            # 只有debug版本（实际上可能不是真正的debug版本）
+            list(APPEND ret_libs_ ${debug_lib_})
+            # message(STATUS "Found debug only: ${debug_lib_}")
+        endif()
+        
+        # 标记已处理
+        list(APPEND processed_bases_ ${base_})
+    endforeach()
+    
+    set(${ret_} ${ret_libs_} PARENT_SCOPE)
+endfunction(libs_debug_release)
+
+# 测试函数
+function(test_libs_debug_release)
+    message(STATUS "\n=== Testing libs_debug_release ===")
+
+    # 测试用例1：标准的debug/release对
+    set(test_libs1 
+        "lib/libopencvd.a" 
+        "lib/libopencv.a"
+        "lib/libboostd.a"
+        "lib/libboost.a"
+    )
+    
+    message(STATUS "\nTest 1 - Standard debug/release pairs:")
+    message(STATUS "Input: ${test_libs1}")
+    libs_debug_release(result1 ${test_libs1})
+    message(STATUS "Output: ${result1}")
+    
+    # 测试用例2：包含单独的以'd'结尾的库
+    set(test_libs2
+        "lib/libcurld.so"
+        "lib/libcurl.so" 
+        "lib/libsad.so"      # 只有这个，不应被视为debug
+        "lib/libxml2.so"
+    )
+    
+    message(STATUS "\nTest 2 - Mixed with standalone 'd' ending:")
+    message(STATUS "Input: ${test_libs2}")
+    libs_debug_release(result2 ${test_libs2})
+    message(STATUS "Output: ${result2}")
+    
+    # 测试用例3：只有debug版本
+    set(test_libs3
+        "lib/libonlydebugd.a"
+        "lib/libregular.a"
+    )
+    
+    message(STATUS "\nTest 3 - Only debug versions:")
+    message(STATUS "Input: ${test_libs3}")
+    libs_debug_release(result3 ${test_libs3})
+    message(STATUS "Output: ${result3}")
+    
+    message(STATUS "=== End of tests ===\n")
+endfunction()
+

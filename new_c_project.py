@@ -24,8 +24,8 @@ def copy_project(src_dir, dst_dir):
         if not os.path.exists(target_root):
             os.makedirs(target_root)
         for file in files:
-            # 跳过 make_new_project.py
-            if file == 'make_new_project.py':
+            # 跳过 new_c_project.py
+            if file == 'new_c_project.py':
                 continue
             src_file = os.path.join(root, file)
             dst_file = os.path.join(target_root, file)

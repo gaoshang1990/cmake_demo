@@ -75,6 +75,12 @@
                 "${workspaceFolder}/build,${workspaceFolder}/build/linux,${workspaceFolder}/build/win32,${workspaceFolder}/build/mingw"
             ],
             "group": "build"
+        },
+        {
+            "label": "clean",
+            "type": "shell",
+            "command": "${workspaceFolder}/clean.bat",
+            "group": "build"
         }
     ]
 }

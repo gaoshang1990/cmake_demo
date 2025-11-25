@@ -17,7 +17,7 @@
             "group": "build",
         },
         {
-            "label": "build_win32",
+            "label": "build_win32d",
             "type": "shell",
             "options": {
                 "cwd": "${workspaceFolder}/build/win32"
@@ -28,7 +28,7 @@
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "release_win32",
+            "label": "build_win32",
             "type": "shell",
             "options": {
                 "cwd": "${workspaceFolder}/build/win32"
@@ -74,12 +74,6 @@
                 "-p",
                 "${workspaceFolder}/build,${workspaceFolder}/build/linux,${workspaceFolder}/build/win32,${workspaceFolder}/build/mingw"
             ],
-            "group": "build"
-        },
-        {
-            "label": "clean",
-            "type": "shell",
-            "command": "${workspaceFolder}/clean.bat",
             "group": "build"
         }
     ]

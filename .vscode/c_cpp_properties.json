@@ -29,9 +29,25 @@
                 "_UNICODE",
                 "__linux__"
             ],
-            "windowsSdkVersion": "10.0.22621.0",
             "compilerPath": "C:/GCC/gcc-arm-9.2-2019.12-mingw-w64-i686-aarch64-none-linux-gnu/bin/aarch64-none-linux-gnu-g++.exe",
-            "cStandard": "c17",
+            "cStandard": "c11",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "${default}"
+        },
+        {
+            "name": "Andriod",
+            "includePath": [
+                "${workspaceFolder}/src/**",
+                "${env:ANDROID_NDK_ROOT}/toolchains/llvm/prebuilt/windows-x86_64/sysroot/usr/include/**"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE",
+                "__linux__"
+            ],
+            "compilerPath": "${env:ANDROID_NDK_ROOT}/toolchains/llvm/prebuilt/windows-x86_64/bin/clang++.exe",
+            "cStandard": "c11",
             "cppStandard": "c++17",
             "intelliSenseMode": "${default}"
         }

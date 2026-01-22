@@ -3,7 +3,8 @@
         {
             "name": "Win32",
             "includePath": [
-                "${workspaceFolder}/**"
+                "${workspaceFolder}/**",
+                "${env:VCPKG_ROOT}/installed/**"
             ],
             "defines": [
                 "_DEBUG",

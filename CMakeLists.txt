@@ -11,6 +11,15 @@ make_version_file(
 
 find_package(eclipse-paho-mqtt-c CONFIG REQUIRED)
 
+set(PAHO_MQTT_C_TARGET "")
+if(TARGET eclipse-paho-mqtt-c::paho-mqtt3c)
+    set(PAHO_MQTT_C_TARGET eclipse-paho-mqtt-c::paho-mqtt3c)
+elseif(TARGET eclipse-paho-mqtt-c::paho-mqtt3c-static)
+    set(PAHO_MQTT_C_TARGET eclipse-paho-mqtt-c::paho-mqtt3c-static)
+else()
+    message(FATAL_ERROR "No compatible target found for eclipse-paho-mqtt-c. Expected one of: eclipse-paho-mqtt-c::paho-mqtt3c or eclipse-paho-mqtt-c::paho-mqtt3c-static")
+endif()
+
 recurse_auto_sources(user_files_c   "*.c"   "src" RELATIVE)
 recurse_auto_sources(user_files_cpp "*.cpp" "src" RELATIVE)
 recurse_auto_sources(user_files_h   "*.h"   "src" RELATIVE)
@@ -32,7 +41,7 @@ if(MSVC)
     find_files_dirs(user_dirs_lib "${user_files_lib}") # 放在提取文件名之前
     libs_debug_release(user_files_lib ${user_files_lib})
     list(APPEND user_files_lib 
-        eclipse-paho-mqtt-c::paho-mqtt3c
+        ${PAHO_MQTT_C_TARGET}
     )
 
 else()
@@ -48,7 +57,7 @@ else()
     list(APPEND user_files_lib 
         pthread
         dl
-        eclipse-paho-mqtt-c::paho-mqtt3c
+        ${PAHO_MQTT_C_TARGET}
     )
 endif(MSVC)
 

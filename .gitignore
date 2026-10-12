@@ -1,6 +1,7 @@
 build/linux
 build/mingw
 build/win32
+build/android/
 
 src/app/version.h
 src/lib/utils4c/libutils4c.a

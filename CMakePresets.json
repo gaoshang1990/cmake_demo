@@ -38,6 +38,17 @@
             }
         },
         {
+            "name": "android",
+            "generator": "MinGW Makefiles",
+            "binaryDir": "${sourceDir}/build/android",
+            "toolchainFile": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+            "cacheVariables": {
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+                "CMAKE_BUILD_TYPE": "Release",
+                "VCPKG_TARGET_TRIPLET": "arm64-android"
+            }
+        },
+        {
             "name": "linux",
             "generator": "Unix Makefiles",
             "binaryDir": "${sourceDir}/build/linux",

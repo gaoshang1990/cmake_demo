@@ -3,15 +3,6 @@
     "manual": "https://code.visualstudio.com/docs/editor/tasks",
     "tasks": [
         {
-            "label": "make_version",
-            "type": "shell",
-            "command": "${workspaceFolder}/script/make_version.bat",
-            "args": [
-                "${workspaceFolder}/src/app"
-            ],
-            "group": "build"
-        },
-        {
             "label": "cmake_win32",
             "type": "shell",
             "command": "cmake",
@@ -48,9 +39,7 @@
         {
             "label": "cmake_mingw",
             "type": "shell",
-            "command": [
-                "cmake"
-            ],
+            "command": "cmake",
             "args": [
                 "--preset mingw"
             ],
@@ -58,13 +47,32 @@
         },
         {
             "label": "build_mingw",
-            "type": "process",
-            "options": {
-                "cwd": "${workspaceFolder}/build/mingw"
-            },
-            "command": "mingw32-make",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "--build",
+                "--preset mingw"
+            ],
+            "group": "build"
+        },
+        {
+            "label": "cmake_android",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "--preset android"
+            ],
             "group": "build",
-            "dependsOn": [],
+        },
+        {
+            "label": "build_android",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "--build",
+                "--preset android"
+            ],
+            "group": "build"
         },
         {
             "label": "mkdir",
@@ -72,7 +80,16 @@
             "command": "mkdir",
             "args": [
                 "-p",
-                "${workspaceFolder}/build,${workspaceFolder}/build/linux,${workspaceFolder}/build/win32,${workspaceFolder}/build/mingw"
+                "${workspaceFolder}/build,${workspaceFolder}/build/linux,${workspaceFolder}/build/win32,${workspaceFolder}/build/mingw,${workspaceFolder}/build/android"
+            ],
+            "group": "build"
+        },
+        {
+            "label": "make_version",
+            "type": "shell",
+            "command": "${workspaceFolder}/script/make_version.bat",
+            "args": [
+                "${workspaceFolder}/src/app"
             ],
             "group": "build"
         },
